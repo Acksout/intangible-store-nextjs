@@ -1,8 +1,9 @@
 "use client";
-import { ComponentProps, ReactNode } from "react";
+
+import { cn } from "@/lib/utils";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { cn } from "@/lib/utils";
+import { ComponentProps, ReactNode } from "react";
 
 export function Nav({ children }: { children: ReactNode }) {
   return (
@@ -12,7 +13,7 @@ export function Nav({ children }: { children: ReactNode }) {
   );
 }
 
-export function NavLink(props: Omit<ComponentProps<typeof Link>, "classname">) {
+export function NavLink(props: Omit<ComponentProps<typeof Link>, "className">) {
   const pathname = usePathname();
   return (
     <Link

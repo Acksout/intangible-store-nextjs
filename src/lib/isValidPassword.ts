@@ -10,5 +10,6 @@ async function hashPassword(password: string) {
     "SHA-512",
     new TextEncoder().encode(password),
   );
+
   return Buffer.from(arrayBuffer).toString("base64");
 }

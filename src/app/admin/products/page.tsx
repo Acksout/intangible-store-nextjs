@@ -11,7 +11,7 @@ import {
 } from "@/components/ui/table";
 import db from "@/db/db";
 import { CheckCircle2, MoreVertical, XCircle } from "lucide-react";
-import { formatCurrency } from "@/lib/formatters";
+import { formatCurrency, formatNumber } from "@/lib/formatters";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -24,12 +24,12 @@ import {
   DeleteDropdownItem,
 } from "./_components/ProductActions";
 
-export default function AdminProductPage() {
+export default function AdminProductsPage() {
   return (
     <>
       <div className="flex items-center justify-between gap-4">
         <PageHeader>Products</PageHeader>
-        <Button>
+        <Button asChild>
           <Link href="/admin/products/new">Add Product</Link>
         </Button>
       </div>
@@ -50,15 +50,14 @@ async function ProductsTable() {
     orderBy: { name: "asc" },
   });
 
-  if (products.length === 0) {
-    return <p>No products found</p>;
-  }
+  if (products.length === 0) return <p>No products found</p>;
+
   return (
     <Table>
       <TableHeader>
         <TableRow>
           <TableHead className="w-0">
-            <span className="sr-only">Available for purchase</span>
+            <span className="sr-only">Available For Purchase</span>
           </TableHead>
           <TableHead>Name</TableHead>
           <TableHead>Price</TableHead>
@@ -68,7 +67,6 @@ async function ProductsTable() {
           </TableHead>
         </TableRow>
       </TableHeader>
-
       <TableBody>
         {products.map((product) => (
           <TableRow key={product.id}>
@@ -87,7 +85,7 @@ async function ProductsTable() {
             </TableCell>
             <TableCell>{product.name}</TableCell>
             <TableCell>{formatCurrency(product.priceInCents / 100)}</TableCell>
-            <TableCell>{product._count.orders}</TableCell>
+            <TableCell>{formatNumber(product._count.orders)}</TableCell>
             <TableCell>
               <DropdownMenu>
                 <DropdownMenuTrigger>

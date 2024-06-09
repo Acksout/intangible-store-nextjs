@@ -27,12 +27,13 @@ async function getUserData() {
       _sum: { pricePaidInCents: true },
     }),
   ]);
+
   return {
     userCount,
-    avgValuePerUser:
+    averageValuePerUser:
       userCount === 0
         ? 0
-        : (orderData._sum.pricePaidInCents || 0) / 100 / userCount / 100,
+        : (orderData._sum.pricePaidInCents || 0) / userCount / 100,
   };
 }
 
@@ -41,6 +42,7 @@ async function getProductData() {
     db.product.count({ where: { isAvailableForPurchase: true } }),
     db.product.count({ where: { isAvailableForPurchase: false } }),
   ]);
+
   return { activeCount, inactiveCount };
 }
 
@@ -50,6 +52,7 @@ export default async function AdminDashboard() {
     getUserData(),
     getProductData(),
   ]);
+
   return (
     <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
       <DashboardCard
@@ -57,13 +60,13 @@ export default async function AdminDashboard() {
         subtitle={`${formatNumber(salesData.numberOfSales)} Orders`}
         body={formatCurrency(salesData.amount)}
       />
-
       <DashboardCard
         title="Customers"
-        subtitle={`${formatCurrency(userData.avgValuePerUser)} Avg. Value`}
+        subtitle={`${formatCurrency(
+          userData.averageValuePerUser,
+        )} Average Value`}
         body={formatNumber(userData.userCount)}
       />
-
       <DashboardCard
         title="Active Products"
         subtitle={`${formatNumber(productData.inactiveCount)} Inactive`}

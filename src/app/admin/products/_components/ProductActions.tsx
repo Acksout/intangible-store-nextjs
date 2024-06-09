@@ -19,6 +19,7 @@ export function ActiveToggleDropdownItem({
   const router = useRouter();
   return (
     <DropdownMenuItem
+      disabled={isPending}
       onClick={() => {
         startTransition(async () => {
           await toggleProductAvailability(id, !isAvailableForPurchase);
@@ -43,6 +44,7 @@ export function DeleteDropdownItem({
   return (
     <DropdownMenuItem
       variant="destructive"
+      disabled={disabled || isPending}
       onClick={() => {
         startTransition(async () => {
           await deleteProduct(id);

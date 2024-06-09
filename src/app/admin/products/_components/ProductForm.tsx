@@ -1,23 +1,25 @@
 "use client";
-import { addProduct, updateProduct } from "@/app/admin/_actions/products";
+
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { formatCurrency } from "@/lib/formatters";
+import { useState } from "react";
+import { addProduct, updateProduct } from "../../_actions/products";
+import { useFormState, useFormStatus } from "react-dom";
 import { Product } from "@prisma/client";
 import Image from "next/image";
-import React from "react";
-import { useFormState, useFormStatus } from "react-dom";
 
-export default function ProductForm({ product }: { product?: Product | null }) {
+export function ProductForm({ product }: { product?: Product | null }) {
   const [error, action] = useFormState(
     product == null ? addProduct : updateProduct.bind(null, product.id),
     {},
   );
-  const [priceInCents, setPriceInCents] = React.useState<number | undefined>(
+  const [priceInCents, setPriceInCents] = useState<number | undefined>(
     product?.priceInCents,
   );
+
   return (
     <form action={action} className="space-y-8">
       <div className="space-y-2">
@@ -32,7 +34,7 @@ export default function ProductForm({ product }: { product?: Product | null }) {
         {error.name && <div className="text-destructive">{error.name}</div>}
       </div>
       <div className="space-y-2">
-        <Label htmlFor="priceInCents">Price in cents</Label>
+        <Label htmlFor="priceInCents">Price In Cents</Label>
         <Input
           type="number"
           id="priceInCents"
@@ -53,7 +55,8 @@ export default function ProductForm({ product }: { product?: Product | null }) {
         <Textarea
           id="description"
           name="description"
-          defaultValue={product?.description || ""}
+          required
+          defaultValue={product?.description}
         />
         {error.description && (
           <div className="text-destructive">{error.description}</div>
@@ -73,10 +76,10 @@ export default function ProductForm({ product }: { product?: Product | null }) {
         {product != null && (
           <Image
             src={product.imagePath}
-            alt="Product image"
             height="400"
             width="400"
-          ></Image>
+            alt="Product Image"
+          />
         )}
         {error.image && <div className="text-destructive">{error.image}</div>}
       </div>
@@ -87,6 +90,7 @@ export default function ProductForm({ product }: { product?: Product | null }) {
 
 function SubmitButton() {
   const { pending } = useFormStatus();
+
   return (
     <Button type="submit" disabled={pending}>
       {pending ? "Saving..." : "Save"}
